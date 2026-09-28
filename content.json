@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "author": "발표자",
+    "deck_title": "디지털포렌식 기술의 이해",
+    "scaffold": "warm-beige",
+    "sub": "제1강 PC 증거 선별",
+    "title": "디지털포렌식 기술의 이해",
+    "body_scale": "1.5"
+  },
+  "slides": [
+    {
+      "author": "GM",
+      "date": "2026.09.28.",
+      "kicker": "PRESENTATION",
+      "signature": "",
+      "subtitle": "현장 PC 수사의 기초",
+      "title_en": "제1강 PC 증거 선별",
+      "title_ko": "디지털포렌식 기술의 이해",
+      "type": "title"
+    },
+    {
+      "_도움말": "목차는 비워 두세요. build 하면 덱 안의 chapter 슬라이드 제목·번호가 자동으로 채워집니다.",
+      "footer_note": "",
+      "heading_en": "",
+      "heading_ko": "",
+      "type": "toc"
+    },
+    {
+      "signature": "chapter // {{chapter_num}} of {{chapter_total}}",
+      "title_en": "증거수사",
+      "title_ko": "포렌식을 하려는 이유",
+      "type": "chapter"
+    },
+    {
+      "type": "visual",
+      "heading_ko": "디지털 포렌식은",
+      "heading_en": "획득, 분석, 복구",
+      "figure_html": "<img src=\"images/그림2.jpg\">",
+      "caption": "",
+      "footer_note": ""
+    },
+    {
+      "type": "visual",
+      "heading_ko": "포렌식이 어려운 이유",
+      "heading_en": "",
+      "figure_html": "<img src=\"images/Snipaste_2026-09-28_13-40-51.png\" style=\"width: 100%;\">",
+      "caption": "",
+      "footer_note": ""
+    },
+    {
+      "_도움말": "figure_html 에 <img src=\"C:/사진/a.jpg\"> 또는 <video src=...> 또는 <table>...</table> 를 넣으세요. 사진·영상은 절대경로나 파일명을 적고 build 하면 덱 images//videos/ 로 자동 복사·경로 정리됩니다.",
+      "caption": "",
+      "figure_html": "<img src=\"images/도서관.png\">",
+      "footer_note": "",
+      "heading_en": "수많은 정보에서 데이터를 찾는 방법",
+      "heading_ko": "도서관에서 책 찾기",
+      "type": "visual"
+    },
+    {
+      "type": "visual",
+      "heading_ko": "책을 찾는 요령",
+      "heading_en": "포렌식이 증거를 찾는 기법",
+      "figure_html": "<img src=\"images/그림1.png\">",
+      "caption": "",
+      "footer_note": ""
+    },
+    {
+      "type": "content",
+      "heading_ko": "아티팩트",
+      "heading_en": "",
+      "body_html": "<ul><li>인위적으로 생성된 물건</li><li>과학적, 기술적 결과물 및 부산물</li></ul><table class=\"pres-table\"><thead><tr><th>항목</th><th>예시</th></tr></thead><tbody><tr><td>메타 데이터</td><td>파일이름, 생성일자, 저장경로 등</td></tr><tr><td>열람 흔적</td><td>링크파일, 검색어, 프리패치 등</td></tr><tr><td>데이터베이스</td><td>이벤트 로그, 레지스트리 등</td></tr></tbody></table>",
+      "footer_note": ""
+    },
+    {
+      "type": "chapter",
+      "title_ko": "DFT",
+      "title_en": "Digital Forensic Tool",
+      "chapter_figure": "",
+      "signature": "section // {{chapter_num}} of {{chapter_total}}"
+    },
+    {
+      "type": "visual",
+      "heading_ko": "DFT",
+      "heading_en": "휴대형 디지털 포렌식 프로그램(검색 엔진)",
+      "figure_html": "<img src=\"images/Snipaste_2026-09-28_13-33-51.png\" style=\"width: 100%;\">",
+      "caption": "",
+      "footer_note": ""
+    },
+    {
+      "type": "visual",
+      "heading_ko": "DFT 수행 절차",
+      "heading_en": "",
+      "figure_html": "<img src=\"images/Snipaste_2026-09-28_13-35-58.png\">",
+      "caption": "",
+      "footer_note": ""
+    },
+    {
+      "type": "visual",
+      "heading_ko": "DFT 실습 영상",
+      "heading_en": "",
+      "figure_html": "<video src=\"videos/2025 국가용 디지털포렌식도구 전문가 양성 과정 북마크부터실습.mp4\" controls></video>",
+      "caption": "",
+      "footer_note": ""
+    },
+    {
+      "footer_note": "",
+      "heading_en": "Key Takeaways",
+      "heading_ko": "핵심 정리",
+      "lead": "현장 PC 수사는 DFT부터",
+      "points_html": "<li>수많은 데이터 속 Smoking gun 찾기</li><li>검색 엔진 다루는 방법</li>",
+      "type": "summary"
+    },
+    {
+      "type": "qa",
+      "heading_ko": "수업 중 질문",
+      "heading_en": "",
+      "qa_html": "<div class=\"qa-item\"><p class=\"q\">무엇이 어렵나요?</p><p class=\"a\">수업이 마음에 들지 않습니다.</p></div>",
+      "footer_note": ""
+    },
+    {
+      "closing_en": "Thank You",
+      "closing_ko": "감사합니다",
+      "contact": "",
+      "prompt": "질문을 환영합니다 · Q&A",
+      "signature": "",
+      "type": "closing"
+    }
+  ]
+}

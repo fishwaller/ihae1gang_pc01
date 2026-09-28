@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>디지털포렌식 기술의 이해</title>
+
+<!-- ─────────────────────────────────────────────
+  AI Context Header — self-describing deck
+  이 파일은 외부 AI에게 전달되어도 단독으로 분석 가능해야 함.
+  - 슬라이드 = <section class="slide type-*"> 요소
+  - 정확한 슬라이드 수는 head의 <script id="deckManifest">.slideCount 참고
+  - 테마 토큰은 theme.css의 :root 변수 참조
+  - 스캐폴드 출처: warm-beige (Warm Beige · 베이지 (밝음)) · gen_themes.py
+───────────────────────────────────────────── -->
+
+<meta name="deck:scaffold" content="warm-beige">
+<meta name="deck:slide-count" content="15">
+
+<script type="application/json" id="deckManifest">
+{
+  "deck_title": "디지털포렌식 기술의 이해",
+  "scaffold": "warm-beige",
+  "slide_count": 15,
+  "chapter_count": 2,
+  "slides": [
+    {
+      "index": 0,
+      "type": "title",
+      "title": "디지털포렌식 기술의 이해"
+    },
+    {
+      "index": 1,
+      "type": "toc",
+      "title": "목차"
+    },
+    {
+      "index": 2,
+      "type": "chapter",
+      "title": "포렌식을 하려는 이유"
+    },
+    {
+      "index": 3,
+      "type": "visual",
+      "title": "디지털 포렌식은"
+    },
+    {
+      "index": 4,
+      "type": "visual",
+      "title": "포렌식이 어려운 이유"
+    },
+    {
+      "index": 5,
+      "type": "visual",
+      "title": "도서관에서 책 찾기"
+    },
+    {
+      "index": 6,
+      "type": "visual",
+      "title": "책을 찾는 요령"
+    },
+    {
+      "index": 7,
+      "type": "content",
+      "title": "아티팩트"
+    },
+    {
+      "index": 8,
+      "type": "chapter",
+      "title": "DFT"
+    },
+    {
+      "index": 9,
+      "type": "visual",
+      "title": "DFT"
+    },
+    {
+      "index": 10,
+      "type": "visual",
+      "title": "DFT 수행 절차"
+    },
+    {
+      "index": 11,
+      "type": "visual",
+      "title": "DFT 실습 영상"
+    },
+    {
+      "index": 12,
+      "type": "summary",
+      "title": "핵심 정리"
+    },
+    {
+      "index": 13,
+      "type": "qa",
+      "title": "수업 중 질문"
+    },
+    {
+      "index": 14,
+      "type": "closing",
+      "title": "감사합니다"
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<link rel="stylesheet" href="theme.css">
+
+<style>
+  /* 슬라이드 네비게이션 (프로토타입) */
+  html, body { overflow: hidden; }
+  body { background: #000; --body-scale: 1.5; }
+
+  /* 본문 글자 크기 조절 — 편집기 '덱 설정 > 본문 글자 크기'가 --body-scale 을 주입.
+     theme.css(위의 <link>) 뒤에 와서 본문 계열 font-size만 덮어쓴다(제목류 제외).
+     값 누락 시 var fallback=1 → 외관 불변. 기준값은 전 테마 공통.
+     --auto-boost 는 좁은(모바일형) 화면에서 fitCanvas()가 자동으로 키움. */
+  .content-body        { font-size: calc(1.4rem  * var(--body-scale, 1) * var(--auto-boost, 1)); }
+  .summary-lead        { font-size: calc(1.4rem  * var(--body-scale, 1) * var(--auto-boost, 1)); }
+  .summary-points li   { font-size: calc(1.25rem * var(--body-scale, 1) * var(--auto-boost, 1)); }
+  .visual-figure table { font-size: calc(1.1rem  * var(--body-scale, 1) * var(--auto-boost, 1)); }
+  .visual-caption      { font-size: calc(0.95rem * var(--body-scale, 1) * var(--auto-boost, 1)); }
+
+  /* 고정 캔버스(1600x900, 16:9) + 화면에 맞춰 축소/레터박스.
+     기기 종류를 감지하지 않고, 실제 뷰포트 비율로 판단(창 크기 조절·폴더블도 정확히 대응). */
+  .deck {
+    position: fixed; top: 50%; left: 50%;
+    width: 1600px; height: 900px;
+    transform: translate(-50%, -50%) scale(var(--canvas-scale, 1));
+    transform-origin: center center;
+  }
+  .deck > .slide {
+    position: absolute; inset: 0;
+    opacity: 0; visibility: hidden;
+    pointer-events: none;
+  }
+  .deck > .slide.active {
+    opacity: 1; visibility: visible;
+    pointer-events: auto;
+  }
+  .nav {
+    position: fixed; bottom: 2vh; left: 50%; transform: translateX(-50%);
+    z-index: 100; display: flex; gap: 0.5rem;
+    font-family: 'Inter', sans-serif; font-size: 0.7rem;
+    color: rgba(255,255,255,0.6);
+  }
+  .nav button {
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3);
+    color: white; padding: 0.4em 0.9em; cursor: pointer;
+    font-family: inherit; letter-spacing: 0.2em;
+  }
+  .nav button:hover { background: rgba(255,255,255,0.1); }
+</style>
+</head>
+<body>
+
+<div class="deck">
+<section class="slide type-title" data-slide-type="title">
+
+  <div class="wordmark">START</div>
+  <div class="bubbles"></div>
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="title-hero">
+    <div class="title-kicker">PRESENTATION</div>
+    <h1 class="title-ko">디지털포렌식 기술의 이해</h1>
+    <div class="divider"></div>
+    <div class="title-en">제1강 PC 증거 선별</div>
+    <p class="title-sub">현장 PC 수사의 기초</p>
+  </div>
+
+  <div class="title-byline">
+    <span class="author">GM</span>
+    <span class="sep"></span>
+    <span class="date">2026.09.28.</span>
+  </div>
+
+  <div class="signature"></div>
+
+</section>
+
+<section class="slide type-toc" data-slide-type="toc">
+
+  <div class="wordmark">INDEX</div>
+  <div class="bubbles"></div>
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="toc-head">
+    <div class="heading-en">Contents</div>
+    <h2 class="heading-ko">목차</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <ol class="toc-list">
+    <li class="toc-item" style="--i: 0;">
+  <span class="toc-num">01</span>
+  <span class="toc-text">
+    <span class="toc-ko">포렌식을 하려는 이유</span>
+    <span class="toc-en">증거수사</span>
+  </span>
+</li>
+
+<li class="toc-item" style="--i: 1;">
+  <span class="toc-num">02</span>
+  <span class="toc-text">
+    <span class="toc-ko">DFT</span>
+    <span class="toc-en">Digital Forensic Tool</span>
+  </span>
+</li>
+
+  </ol>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-chapter" data-slide-type="chapter">
+
+  <div class="wordmark">CHAPTER</div>
+  <div class="bubbles"></div>
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 50%;">
+    <span class="now">01</span>
+    <span class="total"> / 02</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="chapter-figure"></div>
+
+  <div class="main">
+    <div class="chapter-kicker">
+      <span class="label">Chapter</span>
+      <span class="num">01</span>
+    </div>
+    <div class="chapter-title">포렌식을 하려는 이유</div>
+    <div class="divider"></div>
+    <div class="chapter-en">증거수사</div>
+  </div>
+
+  <div class="signature">chapter // 01 of 02</div>
+
+</section>
+
+<section class="slide type-visual" data-slide-type="visual">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 26%;">
+    <span class="now">C.01</span>
+    <span class="total"> · 04/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="visual-head">
+    <div class="heading-en">획득, 분석, 복구</div>
+    <h2 class="heading-ko">디지털 포렌식은</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <div class="visual-stage">
+    <div class="visual-figure">
+      <img src="images/그림2.jpg">
+    </div>
+    <div class="visual-caption"></div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-visual" data-slide-type="visual">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 33%;">
+    <span class="now">C.01</span>
+    <span class="total"> · 05/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="visual-head">
+    <div class="heading-en"></div>
+    <h2 class="heading-ko">포렌식이 어려운 이유</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <div class="visual-stage">
+    <div class="visual-figure">
+      <img src="images/Snipaste_2026-09-28_13-40-51.png" style="width: 100%;">
+    </div>
+    <div class="visual-caption"></div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-visual" data-slide-type="visual">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 40%;">
+    <span class="now">C.01</span>
+    <span class="total"> · 06/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="visual-head">
+    <div class="heading-en">수많은 정보에서 데이터를 찾는 방법</div>
+    <h2 class="heading-ko">도서관에서 책 찾기</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <div class="visual-stage">
+    <div class="visual-figure">
+      <img src="images/도서관.png">
+    </div>
+    <div class="visual-caption"></div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-visual" data-slide-type="visual">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 46%;">
+    <span class="now">C.01</span>
+    <span class="total"> · 07/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="visual-head">
+    <div class="heading-en">포렌식이 증거를 찾는 기법</div>
+    <h2 class="heading-ko">책을 찾는 요령</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <div class="visual-stage">
+    <div class="visual-figure">
+      <img src="images/그림1.png">
+    </div>
+    <div class="visual-caption"></div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-content" data-slide-type="content">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 53%;">
+    <span class="now">C.01</span>
+    <span class="total"> · 08/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="content-grid">
+    <div class="content-heading">
+      <div class="heading-en"></div>
+      <h2 class="heading-ko">아티팩트</h2>
+      <div class="heading-bar"></div>
+    </div>
+    <div class="content-side"></div>
+    <div class="content-body">
+      <ul><li>인위적으로 생성된 물건</li><li>과학적, 기술적 결과물 및 부산물</li></ul><table class="pres-table"><thead><tr><th>항목</th><th>예시</th></tr></thead><tbody><tr><td>메타 데이터</td><td>파일이름, 생성일자, 저장경로 등</td></tr><tr><td>열람 흔적</td><td>링크파일, 검색어, 프리패치 등</td></tr><tr><td>데이터베이스</td><td>이벤트 로그, 레지스트리 등</td></tr></tbody></table>
+    </div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-chapter" data-slide-type="chapter">
+
+  <div class="wordmark">CHAPTER</div>
+  <div class="bubbles"></div>
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 100%;">
+    <span class="now">02</span>
+    <span class="total"> / 02</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="chapter-figure"></div>
+
+  <div class="main">
+    <div class="chapter-kicker">
+      <span class="label">Chapter</span>
+      <span class="num">02</span>
+    </div>
+    <div class="chapter-title">DFT</div>
+    <div class="divider"></div>
+    <div class="chapter-en">Digital Forensic Tool</div>
+  </div>
+
+  <div class="signature">section // 02 of 02</div>
+
+</section>
+
+<section class="slide type-visual" data-slide-type="visual">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 66%;">
+    <span class="now">C.02</span>
+    <span class="total"> · 10/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="visual-head">
+    <div class="heading-en">휴대형 디지털 포렌식 프로그램(검색 엔진)</div>
+    <h2 class="heading-ko">DFT</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <div class="visual-stage">
+    <div class="visual-figure">
+      <img src="images/Snipaste_2026-09-28_13-33-51.png" style="width: 100%;">
+    </div>
+    <div class="visual-caption"></div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-visual" data-slide-type="visual">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 73%;">
+    <span class="now">C.02</span>
+    <span class="total"> · 11/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="visual-head">
+    <div class="heading-en"></div>
+    <h2 class="heading-ko">DFT 수행 절차</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <div class="visual-stage">
+    <div class="visual-figure">
+      <img src="images/Snipaste_2026-09-28_13-35-58.png">
+    </div>
+    <div class="visual-caption"></div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-visual" data-slide-type="visual">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 80%;">
+    <span class="now">C.02</span>
+    <span class="total"> · 12/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="visual-head">
+    <div class="heading-en"></div>
+    <h2 class="heading-ko">DFT 실습 영상</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <div class="visual-stage">
+    <div class="visual-figure">
+      <video src="videos/2025 국가용 디지털포렌식도구 전문가 양성 과정 북마크부터실습.mp4" controls></video>
+    </div>
+    <div class="visual-caption"></div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-summary" data-slide-type="summary">
+
+  <div class="wordmark">KEY</div>
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 86%;">
+    <span class="now">C.02</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="summary-head">
+    <div class="heading-en">Key Takeaways</div>
+    <h2 class="heading-ko">핵심 정리</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <p class="summary-lead">현장 PC 수사는 DFT부터</p>
+
+  <ol class="summary-points">
+    <li>수많은 데이터 속 Smoking gun 찾기</li><li>검색 엔진 다루는 방법</li>
+  </ol>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-qa" data-slide-type="qa">
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="progress-tr" style="--progress-pct: 93%;">
+    <span class="now">C.02</span>
+    <span class="total"> · 14/15</span>
+    <div class="bar"></div>
+  </div>
+
+  <div class="qa-head">
+    <div class="heading-en"></div>
+    <h2 class="heading-ko">수업 중 질문</h2>
+    <div class="heading-bar"></div>
+  </div>
+
+  <div class="qa-list">
+    <div class="qa-item"><p class="q">무엇이 어렵나요?</p><p class="a">수업이 마음에 들지 않습니다.</p></div>
+  </div>
+
+  <div class="footer-note"></div>
+
+</section>
+
+<section class="slide type-closing" data-slide-type="closing">
+
+  <div class="wordmark">END</div>
+  <div class="bubbles"></div>
+
+  <div class="meta-tl">
+    <div class="title">디지털포렌식 기술의 이해</div>
+    <div class="sub">제1강 PC 증거 선별</div>
+  </div>
+
+  <div class="closing-hero">
+    <h1 class="closing-ko">감사합니다</h1>
+    <div class="divider"></div>
+    <div class="closing-en">Thank You</div>
+    <p class="closing-prompt">질문을 환영합니다 · Q&A</p>
+    <div class="closing-contact"></div>
+  </div>
+
+  <div class="signature"></div>
+
+</section>
+
+</div>
+
+<div class="nav">
+  <button onclick="navSlide(-1)">◀ PREV</button>
+  <span id="nav-indicator">1 / 15</span>
+  <button onclick="navSlide(1)">NEXT ▶</button>
+</div>
+
+<script>
+  function fitCanvas() {
+    const CW = 1600, CH = 900;
+    const scale = Math.min(window.innerWidth / CW, window.innerHeight / CH);
+    document.documentElement.style.setProperty('--canvas-scale', scale);
+    const aspect = window.innerWidth / window.innerHeight;
+    const boost = aspect < 1 ? 1.35 : (aspect < 1.3 ? 1.15 : 1);
+    document.documentElement.style.setProperty('--auto-boost', boost);
+  }
+  window.addEventListener('resize', fitCanvas);
+  fitCanvas();
+
+  let current = 0;
+  const slides = document.querySelectorAll('.deck > .slide');
+  function show(i) {
+    // 한 프레임 동안 active 클래스를 모두 제거 후 재부여 → CSS 애니메이션 재발동
+    slides.forEach(s => s.classList.remove('active'));
+    void slides[i].offsetWidth; // 강제 reflow
+    slides[i].classList.add('active');
+    document.getElementById('nav-indicator').textContent = `${i+1} / ${slides.length}`;
+  }
+  function navSlide(d) {
+    current = (current + d + slides.length) % slides.length;
+    show(current);
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') navSlide(1);
+    if (e.key === 'ArrowLeft') navSlide(-1);
+  });
+  show(0);
+</script>
+
+</body>
+</html>
